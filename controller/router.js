@@ -1,6 +1,8 @@
 const BaseController = require('./baseController.js');
 const db = require('../model/database.js');
 const qs = require('qs');
+const ls = require('local-storage');
+const url = require('url')
 
 class Router extends BaseController {
     static login = async (req, res) => {
@@ -16,9 +18,12 @@ class Router extends BaseController {
         });
         req.on('end', async () => {
             let user = qs.parse(data);
+            console.log(user);
             let checkUser = await db.checkUser(user.email, user.password);
             if (checkUser) {
-                this.createSession(user.email, user.password);
+                let now = Date.now();
+                this.createSession(now, user.email, user.password);
+                res.setHeader('Set-Cookie', `loginTime=${now}`);
                 res.writeHead(301, { Location: './home' });
             }
             else {
@@ -39,8 +44,8 @@ class Router extends BaseController {
         let roomHTML = '';
         let rooms = await db.getRooms();
         rooms.forEach((item) => {
-            roomHTML += 
-            `<tr>
+            roomHTML +=
+                `<tr>
                 <td> ${item.rID} </td>
                 <td> ${item.status} </td>
                 <td> ${item.checkIn} </td>
@@ -52,7 +57,7 @@ class Router extends BaseController {
                         </a>
                     </button>
                     <button type="button" class="btn btn-danger">
-                        <a href="delete">
+                        <a href="delete?rID=${item.rID}&status=${item.status}">
                             Delete
                         </a>
                     </button>
@@ -67,6 +72,25 @@ class Router extends BaseController {
     static notFound = (req, res) => {
         res.end('404 Not Found');
     }
+    static logout = (req, res) => {
+        let cookie = qs.parse(req.headers.cookie);
+        let fileName = cookie.loginTime;
+        this.deleteSession(fileName);
+        res.writeHead(301, { Location: '/login' });
+        res.end();
+    }
+
+    static delete = async (req, res) => {
+        let data = url.parse(req.url).query;
+        console.log(data);
+        console.log(qs.parse(data));
+        let rID = qs.parse(data).rID;
+        let status = qs.parse(data).status;
+        if (status) {
+            db.deleteRoom(rID);
+            res.writeHead(301, { Location: '/home' });
+        }
+    };
 }
 
 module.exports = Router;

@@ -31,10 +31,17 @@ class database {
     }
 
     static async getRooms (){
-        let sql = `select room.rID, room.status, rent.checkIn, rent.checkOut from rent join room on rent.rID = room.rID`;
-        let result = await this.run(sql)
-        console.log(result)
+        let sql = `select room.rID, room.status, rent.checkIn, rent.checkOut
+        from room left join rent on rent.rID = room.rID
+        where rent.checkIn >= all (select max(checkIn) from rent group by rID)`;
+        let result = await this.run(sql);
+        console.log(result);
         return result;
+    }
+
+    static deleteRoom (rID) {
+        let sql = `delete from room where rID = ${rID}`;
+        this.run(sql);
     }
 }
 module.exports = database;

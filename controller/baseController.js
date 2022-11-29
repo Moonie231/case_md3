@@ -1,5 +1,5 @@
 const fs = require('fs');
-const ls = require('local-storage');
+const qs = require('qs');
 
 class baseController {
     static readFile(path) {
@@ -17,34 +17,36 @@ class baseController {
             })
         })
     }
-    static createSession(email, password) {
-        let loginTime = Date.now();
-        ls.set('loginTime', loginTime);
-        let expire = 60 * 60 * 24 * 7 * 1000 + loginTime;
+    static createSession(time, email, password) {
+        let expire = 60 * 60 * 24 * 7 * 1000 + time;
         let session = {
             email: email,
             password: password,
             expire: expire
         }
-        fs.writeFile(`./session/${loginTime}`, JSON.stringify(session), 'utf-8', err => {
+        fs.writeFile(`./session/${time}`, JSON.stringify(session), 'utf-8', err => {
             if (err) throw err;
         })
     }
-    static async checkSession() {
+    static async checkSession(req) {
         let now = Date.now();
-        let loginTime = ls.get('loginTime');
+        let cookie = qs.parse(req.headers.cookie);
+        let loginTime = cookie.loginTime;
         console.log(loginTime);
         let filePath = `./session/${loginTime}`;
-
         if (await this.exists(filePath)) {
             let sessionString = await this.readFile(filePath);
             let session = JSON.parse(sessionString);
-            console.log(`now: ${now}`);
-            console.log(`expire: ${session.expire}`);
             return session.expire >= now;
         }
-        console.log('session not available');
         return false;
+    }
+    static deleteSession(fileName) {
+        let filePath = `./session/${fileName}`;
+        fs.unlink(filePath, err => {
+            if (err) throw err;
+            console.log('File deleted!');
+            });
     }
 }
 
