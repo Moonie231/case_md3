@@ -9,6 +9,7 @@ const server = http.createServer((req, res) => {
   let parseUrl = url.parse(req.url, true);
   let path = parseUrl.pathname;
   let trimPath = path.replace(/^\/+|\/$/g, '');
+  console.log(trimPath);
   let handler = Router[trimPath] ? Router[trimPath] : Router.notFound;
   handler(req, res);
 });
