@@ -17,7 +17,6 @@ class database {
             this.connection.query(sql, (err, results) => {
                 if (err) console.log(err);
                 console.log('action success');
-                console.log(results);
                 resolve(results);
             })
         })
@@ -30,6 +29,12 @@ class database {
         let result = response[0].count;
         return result;
     }
-}
 
+    static async getRooms (){
+        let sql = `select room.rID, room.status, rent.checkIn, rent.checkOut from rent join room on rent.rID = room.rID`;
+        let result = await this.run(sql)
+        console.log(result)
+        return result;
+    }
+}
 module.exports = database;
