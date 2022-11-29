@@ -37,22 +37,30 @@ class Router extends BaseController {
     static home = async (req, res) => {
         let dataHTML = await this.readFile('./view/index.html');
         let roomHTML = '';
-        let rooms = await db.getRooms()
-        console.log(typeof rooms)
+        let rooms = await db.getRooms();
         rooms.forEach((item) => {
-            roomHTML += '<tr>'
-            roomHTML += `<td> ${item.rID} </td>`
-            roomHTML += `<td> ${item.status} </td>`
-            roomHTML += `<td> ${item.checkIn} </td>`
-            roomHTML += `<td> ${item.checkOut} </td>`
-            roomHTML += '<td>'
-            roomHTML += '<button type="button" class="btn btn-danger"><a href="edit-room">Edit</button>'
-            roomHTML += '<button type="button" class="btn btn-danger"><a href="delete">Delete</button>'
-            roomHTML += '</td>'
-            roomHTML += '</tr>'
+            roomHTML += 
+            `<tr>
+                <td> ${item.rID} </td>
+                <td> ${item.status} </td>
+                <td> ${item.checkIn} </td>
+                <td> ${item.checkOut} </td>
+                <td>
+                    <button type="button" class="btn btn-danger">
+                        <a href="edit-room">
+                            Edit
+                        </a>
+                    </button>
+                    <button type="button" class="btn btn-danger">
+                        <a href="delete">
+                            Delete
+                        </a>
+                    </button>
+                </td>
+            </tr>`
         });
         res.writeHead(200, 'Content-Type', 'text/html');
-        dataHTML = dataHTML.replace('{room-list}', roomHTML)
+        dataHTML = dataHTML.replace('<tbody></tbody>', roomHTML)
         res.write(dataHTML);
         res.end();
     }
