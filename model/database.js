@@ -24,9 +24,11 @@ class database {
     }
 
     static async checkUser(email, password) {
-        let sql = `select count(email) from user
+        let sql = `select count(email) as count from user
         where email = "${email}" and password = "${password}"`;
-        return await this.run(sql);
+        let response = await this.run(sql);
+        let result = response[0].count;
+        return result;
     }
 }
 
