@@ -34,8 +34,24 @@ class Router extends BaseController {
         res.end();
     }
     static home = async (req, res) => {
-        let dataHTML = await this.readFile('./view/index.html')
+        let dataHTML = await this.readFile('./view/index.html');
+        let roomHTML = '';
+        let rooms = await db.getRooms()
+        console.log(typeof rooms)
+        rooms.forEach((item) => {
+            roomHTML += '<tr>'
+            roomHTML += `<td> ${item.rID} </td>`
+            roomHTML += `<td> ${item.status} </td>`
+            roomHTML += `<td> ${item.checkIn} </td>`
+            roomHTML += `<td> ${item.checkOut} </td>`
+            roomHTML += '<td>'
+            roomHTML += '<button type="button" class="btn btn-danger"><a href="edit-room">Edit</button>'
+            roomHTML += '<button type="button" class="btn btn-danger"><a href="delete">Delete</button>'
+            roomHTML += '</td>'
+            roomHTML += '</tr>'
+        });
         res.writeHead(200, 'Content-Type', 'text/html');
+        dataHTML = dataHTML.replace('{room-list}', roomHTML)
         res.write(dataHTML);
         res.end();
     }
