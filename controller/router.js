@@ -8,7 +8,7 @@ class Router extends BaseController {
         res.writeHead(200, 'Content-Type', 'text/html');
         res.write(dataHTML);
         res.end();
-        }
+    }
     static login_submit = (req, res) => {
         let data = '';
         req.on('data', chunk => {
@@ -18,10 +18,11 @@ class Router extends BaseController {
             let user = qs.parse(data);
             let checkUser = await db.checkUser(user.email, user.password);
             if (checkUser) {
-                res.writeHead(301, {Location: './home'});
+                this.createSession(user.email, user.password);
+                res.writeHead(301, { Location: './home' });
             }
             else {
-                res.writeHead(301, {Location: './login_fail'});
+                res.writeHead(301, { Location: './login_fail' });
             }
             res.end();
         });
