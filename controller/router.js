@@ -58,6 +58,38 @@ class Router extends BaseController {
     static notFound = (req, res) => {
         res.end('404 Not Found');
     }
+
+    static user = async (req, res) => {
+        let dataHTML = await this.readFile('./view/user.html');
+        let userHTML = '';
+        let users = await db.getUser()
+        users.forEach((item) =>{
+            userHTML += `
+            <tr>
+                <td>Name</td>
+                <td>${item.name}</td>
+            </tr>    
+            <tr>
+                <td>Birthday</td>
+                <td>${item.birthday}</td>
+            <tr>
+                <td>Email</td>
+                <td>${item.email}</td>
+            </tr>
+            <tr>
+                <td>Telephone</td>
+                <td>${item.telephone}</td>
+            </tr>        
+            <tr>
+                <td>Avatar</td>
+                <td><img src="${item.avatar}"></td>
+            </tr>`
+        })
+        res.writeHead(200, 'Content-Type', 'text/html');
+        dataHTML = dataHTML.replace('{user}', userHTML)
+        res.write(dataHTML);
+        res.end();
+    }
 }
 
 module.exports = Router;

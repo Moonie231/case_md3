@@ -36,5 +36,11 @@ class database {
         console.log(result)
         return result;
     }
+
+    static async getUser(){
+        let sql = 'select * from user limit 1'
+        let response = await this.run(sql);
+        return response;
+    }
 }
 module.exports = database;
