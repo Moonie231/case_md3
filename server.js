@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-const router = require('./controller/router.js');
+const Router = require('./controller/router.js');
 const db = require('./model/database.js')
 
 db.connect;
@@ -9,7 +9,7 @@ const server = http.createServer((req, res) => {
   let parseUrl = url.parse(req.url, true);
   let path = parseUrl.pathname;
   let trimPath = path.replace(/^\/+|\/$/g, '');
-  let handler = router[trimPath] ? router[trimPath] : router.notFound;
+  let handler = Router[trimPath] ? Router[trimPath] : Router.notFound;
   handler(req, res);
 });
 
