@@ -39,6 +39,12 @@ class database {
         return result;
     }
 
+    static async getUser(){
+        let sql = 'select * from user limit 1'
+        let response = await this.run(sql);
+        return response;
+    }
+
     static deleteRoom (rID) {
         let sql = `delete from room where rID = ${rID}`;
         this.run(sql);
