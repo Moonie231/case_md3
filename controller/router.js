@@ -9,7 +9,7 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
         }
-    static submit_login = (req, res) => {
+    static login_submit = (req, res) => {
         let data = '';
         req.on('data', chunk => {
             data += chunk;
