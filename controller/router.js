@@ -1,7 +1,6 @@
 const BaseController = require('./baseController.js');
 const db = require('../model/database.js');
 const qs = require('qs');
-const ls = require('local-storage');
 const url = require('url')
 
 class Router extends BaseController {

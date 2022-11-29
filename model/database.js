@@ -46,8 +46,10 @@ class database {
     }
 
     static deleteRoom (rID) {
-        let sql = `delete from room where rID = ${rID}`;
-        this.run(sql);
+        let changeRoomID = `update rent set rID = 1 where rID = ${rID}`;
+        this.run(changeRoomID);
+        let del = `delete from room where rID = ${rID}`;
+        this.run(del);
     }
 }
 module.exports = database;
