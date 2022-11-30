@@ -104,15 +104,15 @@ class Router extends BaseController {
                 <td><input type="date" required name="birthday" value=${this.formatDate(user.birthday)}></td>
             <tr>
                 <td>Email</td>
-                <td><input type="text" required value="${user.email}" disabled></td>
+                <td><input type="text" required name="email" value="${user.email}" readonly></td>
             </tr>
             <tr>
                 <td>Telephone</td>
-                <td><input type="text" required value="${user.telephone}"></td>
+                <td><input type="text" name="telephone" required value="${user.telephone}"></td>
             </tr>        
             <tr>
                 <td>Avatar</td>
-                <td><input type="url" value="${user.avatar}"></td>
+                <td><input type="url" name="avatar" value="${user.avatar}"></td>
             </tr>
             <tr>
             <td colspan="2"><button type="submit">Save</button></td>
@@ -126,8 +126,18 @@ class Router extends BaseController {
         let data = '';
         req.on('data', chunk => {
             data += chunk;
-        })
+        });
+        req.on('end', () => {
+            let user = qs.parse(data);
+            console.log("info update");
+            console.log(user);
+            db.updateUserInfo(user.email, user.name, user.birthday, user.telephone, user.avatar);
+        });
+        console.log('info saved');
+        res.writeHead(301, { Location: './edit_info' });
+        res.end();
     }
+    static 
 }
 
 module.exports = Router;
