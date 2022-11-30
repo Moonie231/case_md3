@@ -1,8 +1,6 @@
 const mysql = require('mysql');
-const {raw} = require("mysql");
 
 class database {
-
     static connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
@@ -62,11 +60,9 @@ class database {
         let del = `delete from room where rID = ${rID}`;
         this.run(del);
     }
-
-    static async updatePassword (email, password) {
-        let sql = `update user
-        set password = "${password}"
-        where email = "${email}"`;
+    static async addRoom (description, type, price, image) {
+        let sql = `insert into room (description, type, price, image)
+        value ("${description}", "${type}", ${price}, "${image ? image : ''}");`
         await this.run(sql);
     }
 }
