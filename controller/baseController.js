@@ -26,10 +26,11 @@ class baseController {
         }
         fs.writeFile(`./session/${time}`, JSON.stringify(session), 'utf-8', err => {
             if (err) throw err;
+            console.log('session created');
         })
     }
     static async checkSession(req) {
-        let filePath = this.getSessionPath(req);
+        let filePath = baseController.getSessionPath(req);
         if (await this.exists(filePath)) {
             let sessionString = await this.readFile(filePath);
             let session = JSON.parse(sessionString);
@@ -61,11 +62,19 @@ class baseController {
     }
     static formatDate(date) {
         let dateArray = date.toLocaleDateString().split('/');
-        console.log(typeof dateArray[0]);
-        console.log(dateArray[0]);
         dateArray[0] = '0'.repeat(2 - dateArray[0].length) + dateArray[0];
         dateArray[1] = '0'.repeat(2 - dateArray[1].length) + dateArray[1];
         return `${dateArray[2]}-${dateArray[0]}-${dateArray[1]}`;
+    }
+    static parsePath(path) {
+        let controllers = ['login', 'user', 'room'];
+        let controller = controllers.filter(item => {
+            return path.indexOf(item) !== -1;
+        })[0];
+        if (controller) {
+            let action = controller.length == path.length ? 'default' : path.replace(`${controller}/`, '');
+        return {'controller': controller, 'action': action};
+        } else return {'controller': 'notFound', 'action': 'default'};
     }
 }
 

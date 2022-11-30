@@ -16,7 +16,7 @@ class database {
         return new Promise((resolve, reject) => {
             this.connection.query(sql, (err, results) => {
                 if (err) console.log(err);
-                console.log('action success');
+                // console.log('action success');
                 resolve(results);
             })
         })
@@ -52,6 +52,11 @@ class database {
         this.run(changeRoomID);
         let del = `delete from room where rID = ${rID}`;
         this.run(del);
+    }
+    static async addRoom (description, type, price, image) {
+        let sql = `insert into room (description, type, price, image)
+        value ("${description}", "${type}", ${price}, "${image ? image : ''}");`
+        await this.run(sql);
     }
 }
 module.exports = database;

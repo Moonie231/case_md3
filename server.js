@@ -10,18 +10,25 @@ const server = http.createServer( async (req, res) => {
   let parseUrl = url.parse(req.url, true);
   let path = parseUrl.pathname;
   let trimPath = path.replace(/^\/+|\/$/g, '');
-  console.log(path);
-  console.log(trimPath);
-  let checkSession = await BaseController.checkSession(req);
-  let loginRequest = ['login', 'login_submit', 'login_fail'];
+  let sessionAvailable = await BaseController.checkSession(req);
+  let loginRequest = ['login', 'login/submit', 'login/fail'];
   let tryLogIn = loginRequest.indexOf(trimPath) !== -1;
-  if (checkSession || tryLogIn) {
-    let handler = Router[trimPath] ? Router[trimPath] : Router.notFound;
-    handler(req, res);
+
+  // console.log(BaseController.parsePath(trimPath));
+  console.log(trimPath);
+  console.log("tryLogIn: " + tryLogIn);
+  console.log("checkSession: " + sessionAvailable);
+
+  if (sessionAvailable || tryLogIn) {
+    let {controller, action} = BaseController.parsePath(trimPath);
+    let handler = Router[controller][action] ? Router[controller][action] : Router.notFound;
+    handler(req,res);
   } else {
-    Router.login(req, res)}
+    Router.login.default(req, res);
+  }
 });
 
-server.listen(8080, function () {
-  console.log('server running at localhost:8080');
+const PORT = 8080;
+server.listen(PORT, function () {
+  console.log(`server running at localhost:${PORT}`);
 });
