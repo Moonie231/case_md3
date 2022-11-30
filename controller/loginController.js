@@ -17,6 +17,7 @@ class Login extends BaseController {
             });
             req.on('end', async () => {
                 let user = qs.parse(data);
+                console.log(user);
                 let checkUser = await db.checkUser(user.email, user.password);
                 if (checkUser) {
                     let now = Date.now().toString();
