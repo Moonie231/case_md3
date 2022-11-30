@@ -13,13 +13,13 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <nav></nav>
     </div>
-    <div class="container  ">
+    <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-6">
-                <form method="post" action="edit_info_save">
+                <form method="post" action="/user/save-info">
                     <table class="table">
                         <tr>
                             <td>Name</td>
@@ -42,7 +42,7 @@
                             <td><input type="url" name="avatar" valueAvatar></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><button type="submit">Save</button></td>
+                            <td colspan="2" class="align-middle"><button type="submit">Save</button></td>
                         </tr>
                     </table>
                 </form>

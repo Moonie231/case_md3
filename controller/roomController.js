@@ -13,7 +13,7 @@ class Room extends BaseController {
             roomHTML +=
                 `<tr>
                 <td> ${item.rID} </td>
-                <td> <img class="modal-dialog modal-sm" src="${item.image}"/> </td>
+                <td> <img src="${item.image}" class="modal-sm" alt="image"/> </td>
                 <td> ${item.status} </td>
                 <td> 
                     ${item.checkIn ? item.checkIn.toLocaleTimeString() : ''}<br>
@@ -24,13 +24,25 @@ class Room extends BaseController {
                     ${item.checkOut ? item.checkOut.toLocaleDateString() : ''}
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger">
-                        <a href="edit-room">
+                <button type="button" class="btn btn-success">
+                    <a href="edit-room" class="text-white">
+                        IN
+                    </a>
+                </button>
+                <button type="button" class="btn btn-danger">
+                    <a href="delete?rID=${item.rID}&status=${item.status}" class="text-white">
+                        OUT
+                    </a>
+                </button>
+            </td>
+                <td>
+                    <button type="button" class="btn btn-success">
+                        <a href="edit-room" class="text-white">
                             Edit
                         </a>
                     </button>
                     <button type="button" class="btn btn-danger">
-                        <a href="delete?rID=${item.rID}&status=${item.status}">
+                        <a href="delete?rID=${item.rID}&status=${item.status}" class="text-white">
                             Delete
                         </a>
                     </button>
