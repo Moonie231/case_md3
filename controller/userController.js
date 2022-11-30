@@ -47,10 +47,12 @@ class User extends BaseController {
 
     static 'change-password' = async (req, res) => {
         let dataHTML = await this.readFile('./view/user/change-password.html');
+        dataHTML = dataHTML.replace('<nav></nav>', navbar);
         res.writeHead(200, 'Content-Type', 'text/html');
         res.write(dataHTML);
         res.end();
     }
+
     static 'save-password' = async (req, res) => {
         let data = '';
         let session = await this.getSessionData(req);
@@ -61,7 +63,7 @@ class User extends BaseController {
             let password = qs.parse(data).password;
             let email = session.email;
             UserModel.updateUserPassword(email, password);
-            res.writeHead(301, { Location: '/room/home' });
+            res.writeHead(301, { Location: '/room' });
             res.end();
         });
     }
