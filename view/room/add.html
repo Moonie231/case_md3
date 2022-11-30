@@ -18,8 +18,8 @@
     <nav></nav>
     <div class="row justify-content-center">
       <div class="col-12 col-md-4">
-    <p class="card-text"> Thêm phòng
-    <form class="form-inline my-2 my-lg-0">
+    <p class="card-text"> Add Room
+    <form class="form-inline my-2 my-lg-0" method="post" action="/room/add">
       <table class="table">
         <tr>
           <td>Description</td>
@@ -35,9 +35,9 @@
           <td>
             <select name="type" required>
               <option hidden>Please Select</option>
-              <option value="0">Single</option>
-              <option value="1">Double</option>
-              <option value="2">VIP</option>
+              <option value="single">Single</option>
+              <option value="double">Double</option>
+              <option value="vip">VIP</option>
             </select>
           </td>
         </tr>

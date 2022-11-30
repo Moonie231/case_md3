@@ -72,9 +72,9 @@ class baseController {
             return path.indexOf(item) !== -1;
         })[0];
         if (controller) {
-            let action = controller.length == path.length ? 'default' : path.replace(`${controller}/`, '');
+            let action = controller.length == path.length ? 'view' : path.replace(`${controller}/`, '');
         return {'controller': controller, 'action': action};
-        } else return {'controller': 'notFound', 'action': 'default'};
+        } else return {'controller': 'notFound', 'action': 'view'};
     }
 }
 

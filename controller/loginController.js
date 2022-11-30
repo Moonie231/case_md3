@@ -3,7 +3,7 @@ const db = require('../model/database.js');
 const qs = require('qs');
 
 class Login extends BaseController {
-    static default = async (req, res) => {
+    static view = async (req, res) => {
         if (req.method == "GET") {
             let dataHTML = await this.readFile('./view/login/login.html');
             res.writeHead(200, 'Content-Type', 'text/html');

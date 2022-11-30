@@ -16,31 +16,36 @@
   <nav></nav>
   <div class="row justify-content-center">
     <div class="col-12 col-md-4">
-  <p class="card-text"> Sửa phòng
-  <form class="form-inline my-2 my-lg-0">
+  <p class="card-text"> Edit Room Info
+  <form class="form-inline my-2 my-lg-0" method="post">
     <table class="table">
       <tr>
+        <td>Room ID</td>
+        <td><input class="form-control mr-sm-2" type="number" placeholder="Room ID" name="rID" readonly valueRID></td>
+      </tr>
+      <tr>
         <td>Description</td>
-        <td><input class="form-control mr-sm-2" type="text" placeholder="Description"></td>
+        <td><input class="form-control mr-sm-2" type="text" placeholder="Description" name="description" required valueDescription></td>
       </tr>
       <tr>
         <td>Image</td>
-        <td><input class="form-control mr-sm-2" type="text" placeholder="Image"></td>
+        <td><input class="form-control mr-sm-2" type="text" placeholder="Image" name="image" required valueImage></td>
       </tr>
       <tr>
         <td>Type</td>
-        <td><input class="form-control mr-sm-2" type="text" placeholder="Type"></td>
-      </tr>
-      <tr>
-        <td>Status</td>
-        <td><input class="form-control mr-sm-2" type="text" placeholder="Status"></td>
+        <td>
+          <select class="form-control mr-sm-2" name="type" required>
+            <option value="single">single</option>
+            <option value="double">double</option>
+            <option value="vip">vip</option>
+          </td>
       </tr>
       <tr>
         <td>Price</td>
-        <td><input class="form-control mr-sm-2" type="text" placeholder="Price"></td>
+        <td><input class="form-control mr-sm-2" type="number" placeholder="Price" name="price" valuePrice required></td>
       </tr>
     </table>
-    <button class="btn btn btn-primary" type="submit">Edit</button>
+    <button class="btn btn btn-primary" type="submit">Save</button>
   </form>
   </p>
 </div>

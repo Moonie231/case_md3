@@ -1,5 +1,5 @@
 class NotFound {
-    static default (req, res) {
+    static view (req, res) {
         res.end('404 not found');
     }
 }
