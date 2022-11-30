@@ -39,10 +39,10 @@ class database {
         return result;
     }
 
-    static async getUser(){
-        let sql = 'select * from user limit 1'
+    static async getUser(email){
+        let sql = `select * from user where email = "${email}";`;
         let response = await this.run(sql);
-        return response;
+        return response[0];
     }
 
     static deleteRoom (rID) {

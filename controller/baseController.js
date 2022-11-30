@@ -29,14 +29,11 @@ class baseController {
         })
     }
     static async checkSession(req) {
-        let now = Date.now();
-        let cookie = qs.parse(req.headers.cookie);
-        let loginTime = cookie.loginTime;
-        console.log(loginTime);
-        let filePath = `./session/${loginTime}`;
+        let filePath = this.getSessionPath(req);
         if (await this.exists(filePath)) {
             let sessionString = await this.readFile(filePath);
             let session = JSON.parse(sessionString);
+            let now = Date.now();
             return session.expire >= now;
         }
         return false;
@@ -46,7 +43,29 @@ class baseController {
         fs.unlink(filePath, err => {
             if (err) throw err;
             console.log('File deleted!');
-            });
+        });
+    }
+    static getCookie(req) {
+        return qs.parse(req.headers.cookie);
+    }
+    static getSessionPath(req) {
+        let cookie = this.getCookie(req);
+        let loginTime = cookie.loginTime;
+        let filePath = `./session/${loginTime}`;
+        return filePath;
+    }
+    static async getSessionData(req) {
+        let sessionPath = this.getSessionPath(req);
+        let sessionString = await this.readFile(sessionPath);
+        return JSON.parse(sessionString);
+    }
+    static formatDate(date) {
+        let dateArray = date.toLocaleDateString().split('/');
+        console.log(typeof dateArray[0]);
+        console.log(dateArray[0]);
+        dateArray[0] = '0'.repeat(2 - dateArray[0].length) + dateArray[0];
+        dateArray[1] = '0'.repeat(2 - dateArray[1].length) + dateArray[1];
+        return `${dateArray[2]}-${dateArray[0]}-${dateArray[1]}`;
     }
 }
 
