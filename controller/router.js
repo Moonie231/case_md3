@@ -10,6 +10,7 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
     }
+
     static login_submit = (req, res) => {
         let data = '';
         req.on('data', chunk => {
@@ -31,6 +32,7 @@ class Router extends BaseController {
             res.end();
         });
     }
+
     static login_fail = async (req, res) => {
         let dataHTML = await this.readFile('./view/login.html');
         dataHTML = dataHTML.replace('<p class="text-danger"></p>', '<p class="text-danger">Incorrect email or password</p>');
@@ -38,6 +40,7 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
     }
+
     static home = async (req, res) => {
         let dataHTML = await this.readFile('./view/index.html');
         let roomHTML = '';
@@ -68,9 +71,11 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
     }
+
     static notFound = (req, res) => {
         res.end('404 Not Found');
     }
+
     static logout = (req, res) => {
         let cookie = qs.parse(req.headers.cookie);
         let fileName = cookie.loginTime;
@@ -78,6 +83,7 @@ class Router extends BaseController {
         res.writeHead(301, { Location: '/login' });
         res.end();
     }
+
     static delete = async (req, res) => {
         let data = url.parse(req.url).query;
         console.log(data);
@@ -89,6 +95,7 @@ class Router extends BaseController {
             res.writeHead(301, { Location: '/home' });
         }
     };
+
     static edit_info = async (req, res) => {
         let session = await this.getSessionData(req);
         let dataHTML = await this.readFile('./view/edit_info.html');
@@ -122,11 +129,18 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
     }
+
     static edit_info_save = (req, res) => {
         let data = '';
         req.on('data', chunk => {
             data += chunk;
         })
+    }
+
+    static change_password = async (req, res) =>{
+        let dataHTML = await this.readFile('./view/change_password.html')
+        res.writeHead(200, 'Content-Type', 'text/html')
+        res.end(dataHTML)
     }
 }
 
