@@ -21,7 +21,7 @@ const server = http.createServer( async (req, res) => {
     console.log(BaseController.parsePath(trimPath));
     handler(req,res);
   } else {
-    Router.login.default(req, res);
+    Router.login.view(req, res);
   }
 });
 

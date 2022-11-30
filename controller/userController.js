@@ -40,7 +40,7 @@ class User extends BaseController {
             console.log(user);
             db.updateUserInfo(user.email, user.name, user.birthday, user.telephone, user.avatar);
         });
-        console.log('info saved');
+        console.log('user info saved');
         res.writeHead(301, { Location: '/user/edit-info' });
         res.end();
     }
