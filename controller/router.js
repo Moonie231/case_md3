@@ -1,7 +1,4 @@
 const BaseController = require('./baseController.js');
-const db = require('../model/database.js');
-const qs = require('qs');
-const url = require('url')
 const LoginController = require('./loginController.js');
 const RoomController = require('./roomController.js');
 const UserController = require('./userController.js');
