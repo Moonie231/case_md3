@@ -1,4 +1,8 @@
 node_modules
+<<<<<<< HEAD
 test
 backup
 session/*
+=======
+test
+>>>>>>> 048dbfde7d0f6ebf0779d1a0b3b8c78ef5c98387
