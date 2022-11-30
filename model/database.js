@@ -44,6 +44,7 @@ class database {
     static async getUser(email){
         let sql = `select * from user where email = "${email}";`;
         let response = await this.run(sql);
+        console.log(response)
         return response[0];
     }
 
