@@ -10,6 +10,7 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
     }
+
     static login_submit = (req, res) => {
         let data = '';
         req.on('data', chunk => {
@@ -31,6 +32,7 @@ class Router extends BaseController {
             res.end();
         });
     }
+
     static login_fail = async (req, res) => {
         let dataHTML = await this.readFile('./view/login.html');
         dataHTML = dataHTML.replace('<p class="text-danger"></p>', '<p class="text-danger">Incorrect email or password</p>');
@@ -38,6 +40,7 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
     }
+
     static home = async (req, res) => {
         let dataHTML = await this.readFile('./view/index.html');
         let roomHTML = '';
@@ -68,9 +71,11 @@ class Router extends BaseController {
         res.write(dataHTML);
         res.end();
     }
+
     static notFound = (req, res) => {
         res.end('404 Not Found');
     }
+
     static logout = (req, res) => {
         let cookie = qs.parse(req.headers.cookie);
         let fileName = cookie.loginTime;
@@ -78,6 +83,7 @@ class Router extends BaseController {
         res.writeHead(301, { Location: '/login' });
         res.end();
     }
+
     static delete = async (req, res) => {
         let data = url.parse(req.url).query;
         console.log(data);
@@ -88,40 +94,23 @@ class Router extends BaseController {
             db.deleteRoom(rID);
             res.writeHead(301, { Location: '/home' });
         }
-    };
+    }
+
     static edit_info = async (req, res) => {
         let session = await this.getSessionData(req);
         let dataHTML = await this.readFile('./view/edit_info.html');
         let user = await db.getUser(session.email);
         console.log(user);
-        let userHTML = `
-            <tr>
-                <td>Name</td>
-                <td><input type="text" required name="name" value="${user.name}"></td>
-            </tr>    
-            <tr>
-                <td>Birthday</td>
-                <td><input type="date" required name="birthday" value=${this.formatDate(user.birthday)}></td>
-            <tr>
-                <td>Email</td>
-                <td><input type="text" required name="email" value="${user.email}" readonly></td>
-            </tr>
-            <tr>
-                <td>Telephone</td>
-                <td><input type="text" name="telephone" required value="${user.telephone}"></td>
-            </tr>        
-            <tr>
-                <td>Avatar</td>
-                <td><input type="url" name="avatar" value="${user.avatar}"></td>
-            </tr>
-            <tr>
-            <td colspan="2"><button type="submit">Save</button></td>
-            </tr>`
+        dataHTML = dataHTML.replace('valueName', `value="${user.name}"`);
+        dataHTML = dataHTML.replace('valueBirthday', `value="${user.birthday}"`);
+        dataHTML = dataHTML.replace('valueEmail', `value="${user.email}"`);
+        dataHTML = dataHTML.replace('valueTelephone', `value="${user.telephone}"`);
+        dataHTML = dataHTML.replace('valueAvatar', `value="${user.avatar}"`);
         res.writeHead(200, 'Content-Type', 'text/html');
-        dataHTML = dataHTML.replace('<tbody></tbody>', userHTML)
         res.write(dataHTML);
         res.end();
     }
+
     static edit_info_save = (req, res) => {
         let data = '';
         req.on('data', chunk => {
@@ -137,7 +126,7 @@ class Router extends BaseController {
         res.writeHead(301, { Location: './edit_info' });
         res.end();
     }
-    static 
+
 }
 
 module.exports = Router;
