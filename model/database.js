@@ -34,8 +34,7 @@ class database {
 
     static async getRooms() {
         let sql = `select room.rID, room.image, room.status, rent.checkIn, rent.checkOut
-        from room left join rent on rent.rID = room.rID
-        where rent.checkIn >= all ()`;
+        from room left join rent on rent.rID = room.rID`;
         let result = await this.run(sql);
         console.log(result);
         return result;
@@ -44,6 +43,7 @@ class database {
     static async getUser(email){
         let sql = `select * from user where email = "${email}";`;
         let response = await this.run(sql);
+        console.log(response)
         return response[0];
     }
 
