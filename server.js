@@ -11,17 +11,14 @@ const server = http.createServer( async (req, res) => {
   let path = parseUrl.pathname;
   let trimPath = path.replace(/^\/+|\/$/g, '');
   let sessionAvailable = await BaseController.checkSession(req);
+
   let loginRequest = ['login', 'login/submit', 'login/fail'];
   let tryLogIn = loginRequest.indexOf(trimPath) !== -1;
-
-  // console.log(BaseController.parsePath(trimPath));
-  console.log(trimPath);
-  console.log("tryLogIn: " + tryLogIn);
-  console.log("checkSession: " + sessionAvailable);
 
   if (sessionAvailable || tryLogIn) {
     let {controller, action} = BaseController.parsePath(trimPath);
     let handler = Router[controller][action] ? Router[controller][action] : Router.notFound;
+    console.log(BaseController.parsePath(trimPath));
     handler(req,res);
   } else {
     Router.login.default(req, res);
