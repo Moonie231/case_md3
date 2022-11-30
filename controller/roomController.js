@@ -13,9 +13,16 @@ class Room extends BaseController {
             roomHTML +=
                 `<tr>
                 <td> ${item.rID} </td>
+                <td> <img class="modal-dialog modal-sm" src="${item.image}"/> </td>
                 <td> ${item.status} </td>
-                <td> ${item.checkIn} </td>
-                <td> ${item.checkOut} </td>
+                <td> 
+                    ${item.checkIn ? item.checkIn.toLocaleTimeString() : ''}<br>
+                    ${item.checkIn ? item.checkIn.toLocaleDateString() : ''}
+                </td>
+                <td> 
+                    ${item.checkOut ? item.checkOut.toLocaleTimeString() : ''}<br>
+                    ${item.checkOut ? item.checkOut.toLocaleDateString() : ''}
+                </td>
                 <td>
                     <button type="button" class="btn btn-danger">
                         <a href="edit-room">
@@ -45,7 +52,7 @@ class Room extends BaseController {
         let status = qs.parse(data).status;
         if (status) {
             db.deleteRoom(rID);
-            res.writeHead(301, { Location: '/home'});
+            res.writeHead(301, { Location: '/home' });
         }
     }
 
@@ -57,7 +64,7 @@ class Room extends BaseController {
         req.on('end', () => {
             let room = qs.parse(data);
             db.addRoom(room.description, room.type, room.price, room.image);
-            res.writeHead(301, {Location: '/home'});
+            res.writeHead(301, { Location: '/home' });
             res.end();
         })
     }

@@ -33,7 +33,7 @@ class database {
     }
 
     static async getRooms() {
-        let sql = `select room.rID, room.status, rent.checkIn, rent.checkOut
+        let sql = `select room.rID, room.image, room.status, rent.checkIn, rent.checkOut
         from room left join rent on rent.rID = room.rID
         where rent.checkIn >= all ()`;
         let result = await this.run(sql);
