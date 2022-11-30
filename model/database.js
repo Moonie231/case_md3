@@ -5,7 +5,7 @@ class database {
         host: 'localhost',
         user: 'root',
         password: '1234',
-        database: 'caseM3',
+        database: 'casem3',
         charset: 'utf8_general_ci'
     })
 
@@ -33,8 +33,9 @@ class database {
     }
 
     static async getRooms() {
-        let sql = `select room.rID, room.image, room.status, rent.checkIn, rent.checkOut
-        from room left join rent on rent.rID = room.rID`;
+        let sql = `select room.rID, room.image, room.status, max(rent.checkIn) as checkIn, rent.checkOut
+        from room left join rent on rent.rID = room.rID
+        group by room.rID;`;
         let result = await this.run(sql);
         console.log(result);
         return result;
@@ -51,6 +52,11 @@ class database {
         let sql = `update user 
         set name="${name}", birthday="${birthday}", telephone="${telephone}", avatar="${avatar}"
         where email="${email}"`;
+        await this.run(sql);
+    }
+
+    static async updateUserPassword(email, password) {
+        let sql = `update user set password="${password}" where email="${email}"`;
         await this.run(sql);
     }
 
