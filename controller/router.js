@@ -78,7 +78,6 @@ class Router extends BaseController {
         res.writeHead(301, { Location: '/login' });
         res.end();
     }
-
     static delete = async (req, res) => {
         let data = url.parse(req.url).query;
         console.log(data);
@@ -90,36 +89,44 @@ class Router extends BaseController {
             res.writeHead(301, { Location: '/home' });
         }
     };
-    static user = async (req, res) => {
-        let dataHTML = await this.readFile('./view/user.html');
-        let userHTML = '';
-        let users = await db.getUser()
-        users.forEach((item) =>{
-            userHTML += `
+    static edit_info = async (req, res) => {
+        let session = await this.getSessionData(req);
+        let dataHTML = await this.readFile('./view/edit_info.html');
+        let user = await db.getUser(session.email);
+        console.log(user);
+        let userHTML = `
             <tr>
                 <td>Name</td>
-                <td>${item.name}</td>
+                <td><input type="text" required name="name" value="${user.name}"></td>
             </tr>    
             <tr>
                 <td>Birthday</td>
-                <td>${item.birthday}</td>
+                <td><input type="date" required name="birthday" value=${this.formatDate(user.birthday)}></td>
             <tr>
                 <td>Email</td>
-                <td>${item.email}</td>
+                <td><input type="text" required value="${user.email}" disabled></td>
             </tr>
             <tr>
                 <td>Telephone</td>
-                <td>${item.telephone}</td>
+                <td><input type="text" required value="${user.telephone}"></td>
             </tr>        
             <tr>
                 <td>Avatar</td>
-                <td><img src="${item.avatar}"></td>
+                <td><input type="url" value="${user.avatar}"></td>
+            </tr>
+            <tr>
+            <td colspan="2"><button type="submit">Save</button></td>
             </tr>`
-        })
         res.writeHead(200, 'Content-Type', 'text/html');
-        dataHTML = dataHTML.replace('{user}', userHTML)
+        dataHTML = dataHTML.replace('<tbody></tbody>', userHTML)
         res.write(dataHTML);
         res.end();
+    }
+    static edit_info_save = (req, res) => {
+        let data = '';
+        req.on('data', chunk => {
+            data += chunk;
+        })
     }
 }
 
