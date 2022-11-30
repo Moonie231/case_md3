@@ -1,15 +1,14 @@
 const BaseController = require('./baseController.js');
-const db = require('../model/database.js');
+const RoomModel = require('../model/roomModel.js');
 const qs = require('qs');
 const url = require('url');
 const navbar = require('../view/navbar.js');
-const { runInNewContext } = require('vm');
 
 class Room extends BaseController {
     static view = async (req, res) => {
         let dataHTML = await this.readFile('./view/room/index.html');
         let roomHTML = '';
-        let rooms = await db.getRooms();
+        let rooms = await RoomModel.getRooms();
         rooms.forEach((item) => {
             roomHTML +=
                 `<tr>
@@ -61,7 +60,7 @@ class Room extends BaseController {
         let data = url.parse(req.url).query;
         let {rID, status} = qs.parse(data);
         if (status == 'available') {
-            db.deleteRoom(rID);
+            RoomModel.deleteRoom(rID);
         }
         res.writeHead(301, { Location: '/room' });
         res.end();
@@ -81,7 +80,7 @@ class Room extends BaseController {
             })
             req.on('end', () => {
                 let room = qs.parse(data);
-                db.addRoom(room.description, room.type, room.price, room.image);
+                RoomModel.addRoom(room.description, room.type, room.price, room.image);
                 res.writeHead(301, { Location: '/room' });
                 res.end();
             })
@@ -92,7 +91,7 @@ class Room extends BaseController {
         let rID = qs.parse(url.parse(req.url).query).rID;
         if (req.method == "GET") {
 
-            let room = (await db.getRoomByID(rID))[0];
+            let room = (await RoomModel.getRoomByID(rID))[0];
             console.log(room);
             let dataHTML = await this.readFile('./view/room/edit-room.html');
             dataHTML = dataHTML.replace('<nav></nav>', navbar);
@@ -113,7 +112,7 @@ class Room extends BaseController {
             req.on('end', () => {
                 let room = qs.parse(data);
                 console.log(room);
-                db.updateRoomInfo(rID, room.description, room.type, room.price, room.image);
+                RoomModel.updateRoomInfo(rID, room.description, room.type, room.price, room.image);
                 res.writeHead(301, {Location: '/room'});
                 res.end();
             })

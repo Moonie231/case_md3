@@ -1,5 +1,5 @@
 const BaseController = require('./baseController.js');
-const db = require('../model/database.js');
+const UserModel = require('../model/userModel.js');
 const qs = require('qs');
 
 class Login extends BaseController {
@@ -18,12 +18,12 @@ class Login extends BaseController {
             req.on('end', async () => {
                 let user = qs.parse(data);
                 console.log(user);
-                let checkUser = await db.checkUser(user.email, user.password);
+                let checkUser = await UserModel.checkUser(user.email, user.password);
                 if (checkUser) {
                     let now = Date.now().toString();
                     this.createSession(now, user.email, user.password);
                     res.setHeader('Set-Cookie', `loginTime=${now}`);
-                    res.writeHead(301, { Location: '/room/home' });
+                    res.writeHead(301, { Location: '/room' });
                     res.end();
                 }
                 else {
