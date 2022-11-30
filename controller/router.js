@@ -94,38 +94,19 @@ class Router extends BaseController {
             db.deleteRoom(rID);
             res.writeHead(301, { Location: '/home' });
         }
-    };
+    }
 
     static edit_info = async (req, res) => {
         let session = await this.getSessionData(req);
         let dataHTML = await this.readFile('./view/edit_info.html');
         let user = await db.getUser(session.email);
         console.log(user);
-        let userHTML = `
-            <tr>
-                <td>Name</td>
-                <td><input type="text" required name="name" value="${user.name}"></td>
-            </tr>    
-            <tr>
-                <td>Birthday</td>
-                <td><input type="date" required name="birthday" value=${this.formatDate(user.birthday)}></td>
-            <tr>
-                <td>Email</td>
-                <td><input type="text" required name="email" value="${user.email}" readonly></td>
-            </tr>
-            <tr>
-                <td>Telephone</td>
-                <td><input type="text" name="telephone" required value="${user.telephone}"></td>
-            </tr>        
-            <tr>
-                <td>Avatar</td>
-                <td><input type="url" name="avatar" value="${user.avatar}"></td>
-            </tr>
-            <tr>
-            <td colspan="2"><button type="submit">Save</button></td>
-            </tr>`
+        dataHTML = dataHTML.replace('valueName', `value="${user.name}"`);
+        dataHTML = dataHTML.replace('valueBirthday', `value="${user.birthday}"`);
+        dataHTML = dataHTML.replace('valueEmail', `value="${user.email}"`);
+        dataHTML = dataHTML.replace('valueTelephone', `value="${user.telephone}"`);
+        dataHTML = dataHTML.replace('valueAvatar', `value="${user.avatar}"`);
         res.writeHead(200, 'Content-Type', 'text/html');
-        dataHTML = dataHTML.replace('<tbody></tbody>', userHTML)
         res.write(dataHTML);
         res.end();
     }
@@ -147,9 +128,28 @@ class Router extends BaseController {
     }
 
     static change_password = async (req, res) =>{
+        let session = await this.getSessionData(req);
         let dataHTML = await this.readFile('./view/change_password.html')
+        let user = await db.getUser(session.email);
+        console.log(user);
         res.writeHead(200, 'Content-Type', 'text/html')
         res.end(dataHTML)
+    }
+
+    static password_save = (req, res) => {
+        let data = '';
+        req.on('data', chunk => {
+            data += chunk;
+        })
+        req.on('end', () => {
+            let user = qs.parse(data);
+            console.log(user)
+            console.log('password update')
+            db.updatePassword(user.email, user.password)
+        });
+        console.log('password saved');
+        res.writeHead(301, {Location: './home'});
+        res.end();
     }
 }
 

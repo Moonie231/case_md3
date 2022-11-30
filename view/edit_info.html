@@ -48,7 +48,29 @@
             <div class="col-6">
                 <form method="post" action="edit_info_save">
                     <table class="table">
-                        <tbody></tbody>
+                        <tr>
+                            <td>Name</td>
+                            <td><input type="text" required name="name" valueName></td>
+                        </tr>
+                        <tr>
+                            <td>Birthday</td>
+                            <td><input type="date" required name="birthday" valueBirthDay>
+                            </td>
+                        <tr>
+                            <td>Email</td>
+                            <td><input type="text" required name="email" valueEmail readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Telephone</td>
+                            <td><input type="text" name="telephone" required valueTelephone></td>
+                        </tr>
+                        <tr>
+                            <td>Avatar</td>
+                            <td><input type="url" name="avatar" valueAvatar></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button type="submit">Save</button></td>
+                        </tr>
                     </table>
                 </form>
             </div>
