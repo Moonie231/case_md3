@@ -35,7 +35,7 @@ class database {
     static async getRooms() {
         let sql = `select room.rID, room.status, rent.checkIn, rent.checkOut
         from room left join rent on rent.rID = room.rID
-        where rent.checkIn >= all (select max(checkIn) from rent group by rID)`;
+        where rent.checkIn >= all ()`;
         let result = await this.run(sql);
         console.log(result);
         return result;
