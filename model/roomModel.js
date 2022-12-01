@@ -3,18 +3,8 @@ const Database = require('./database.js');
 class RoomModel extends Database {
 
     static async getRooms() {
-        let sql = `select room.rID, room.status, room.image, rent.checkIn, rent.checkOut
-        from room left join rent on room.rid = rent.rid
-        join (select room.rid, max(rent.checkin) checkin
-        from room left join rent on room.rid = rent.rid
-        group by room.rid) as latest on rent.rid = latest.rid and rent.checkin = latest.checkin
-        where room.usable = '1'
-        union
-        select room.rid, room.status, room.image, rent.checkin, rent.checkout
-        from room left join rent on room.rid = rent.rid
-        where room.rid not in (select rid from rent) and room.usable = '1'`;
+        let sql = `select * from roomstatus`;
         let result = await this.run(sql);
-        console.log(result);
         return result;
     }
 
@@ -37,6 +27,32 @@ class RoomModel extends Database {
     static async updateRoomInfo (rID, description, type, price, image) {
         let sql = `update room set description = "${description}", type = "${type}", price = ${price}, image = "${image}" where rID = ${rID}`;
         await this.run(sql);
+    }
+
+    static async changeRoomStatus (rID, status) {
+        let sql = `update room set status = "${status}" where rID = ${rID}`;
+        await this.run(sql);
+    }
+
+    static async checkin (rID, time) {
+        let sql = `insert into rent (rid, checkin) value (${rID}, "${time}")`;
+        await this.run(sql);
+    }
+
+    static async checkout (rID, checkin, checkout) {
+        let sql = `update rent set checkout = "${checkout}" where rid = ${rID} and checkin = "${checkin}"`;
+        await this.run(sql);
+    }
+
+    static async getLatestCheckIn (rID) {
+        let sql = `select checkIn from roomstatus where rid = ${rID}`;
+        let result = await this.run(sql);
+        let checkIn = result[0].checkIn;
+        let timeZone = 7
+        checkIn.setHours(checkIn.getHours() + timeZone);
+        checkIn = (checkIn.toISOString()).slice(0,-5)
+        checkIn = checkIn.replace('T', ' ');
+        return checkIn;
     }
 }
 

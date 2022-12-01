@@ -1,7 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Login</title>
+  <meta charset="UTF-8">
+  <title>Check out</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,29 +12,28 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<div class="container ">
+<div class="container-fluid">
+  <nav></nav>
   <div class="row justify-content-center">
     <div class="col-12 col-md-4">
-      <form method="post" action="/login">
-        <div class="form-group">
-          <h2 class="text-center">Login</h2>
-          <label for="exampleInputEmail1">Email address</label>
-          <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" name="password" class="form-control" id="exampleInputPassword1">
-        </div>
-        <div>
-          <p class="text-danger"></p>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    </div>
-  </div>
-
+    <p class="card-text">Check Out</p>
+  <form class="form-inline my-2 my-lg-0" method="post">
+    <table class="table">
+      <tr>
+        <td>Room ID</td>
+        <td><input class="form-control mr-sm-2" type="number" placeholder="Room ID" name="rID" readonly valueRID></td>
+      </tr>
+      <tr>
+        <td>Checkin</td>
+        <td><input class="form-control mr-sm-2" type="datetime-local" placeholder="Description" name="checkout" required></td>
+      </tr>
+    </table>
+    <button class="btn btn btn-primary" type="submit">Save</button>
+  </form>
 </div>
+  </div>
+</div>
+</body>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -45,5 +45,4 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-</body>
 </html>
