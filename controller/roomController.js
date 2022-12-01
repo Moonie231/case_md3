@@ -24,28 +24,29 @@ class Room extends BaseController {
                     ${item.checkOut ? item.checkOut.toLocaleDateString() : ''}
                 </td>
                 <td>
-                <button type="button" class="btn btn-success">
-                    <a href="edit-room" class="text-white">
-                        IN
+                    <a ${item.status == 'rented' ? '#' : `href="/room/checkin?rID=${item.rID}"`} class="text-white">
+                        <button type="button" class="btn btn-success" ${item.status == 'rented' ? 'disabled' : ''}>
+                            IN
+                        </button>    
                     </a>
-                </button>
-                <button type="button" class="btn btn-danger">
-                    <a href="delete?rID=${item.rID}&status=${item.status}" class="text-white">
-                        OUT
+                    <a ${item.status == 'available' ? '#' : `href="/room/checkout?rID=${item.rID}"`} class="text-white">
+                        <button type="button" class="btn btn-danger" ${item.status == 'available' ? 'disabled' : ''}>
+                            OUT
+                        </button>
                     </a>
                 </button>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-success">
-                        <a href="/room/edit?rID=${item.rID}" class="text-white">
+                    <a href="/room/edit?rID=${item.rID}" class="text-white">
+                        <button type="button" class="btn btn-success">
                             Edit
-                        </a>
-                    </button>
-                    <button type="button" class="btn btn-danger ${item.status == 'rented' ? 'disabled' : ''}">
-                        <a ${item.status == 'rented' ? '#' : `href="/room/delete?rID=${item.rID}&status=${item.status}"`} class="text-white">
+                        </button>
+                    </a>
+                    <a ${item.status == 'rented' ? '#' : `href="/room/delete?rID=${item.rID}&status=${item.status}"`} class="text-white">
+                        <button type="button" class="btn btn-danger" ${item.status == 'rented' ? 'disabled' : ''}>
                             Delete
-                        </a>
-                    </button>
+                        </button>
+                    </a>
                 </td>
             </tr>`
         });
@@ -58,7 +59,7 @@ class Room extends BaseController {
 
     static delete = async (req, res) => {
         let data = url.parse(req.url).query;
-        let {rID, status} = qs.parse(data);
+        let { rID, status } = qs.parse(data);
         if (status == 'available') {
             RoomModel.deleteRoom(rID);
         }
@@ -77,20 +78,19 @@ class Room extends BaseController {
             let data = '';
             req.on('data', chunk => {
                 data += chunk;
-            })
+            });
             req.on('end', () => {
                 let room = qs.parse(data);
                 RoomModel.addRoom(room.description, room.type, room.price, room.image);
                 res.writeHead(301, { Location: '/room' });
                 res.end();
-            })
+            });
         }
     }
 
     static edit = async (req, res) => {
         let rID = qs.parse(url.parse(req.url).query).rID;
         if (req.method == "GET") {
-
             let room = (await RoomModel.getRoomByID(rID))[0];
             console.log(room);
             let dataHTML = await this.readFile('./view/room/edit-room.html');
@@ -113,13 +113,63 @@ class Room extends BaseController {
                 let room = qs.parse(data);
                 console.log(room);
                 RoomModel.updateRoomInfo(rID, room.description, room.type, room.price, room.image);
-                res.writeHead(301, {Location: '/room'});
+                res.writeHead(301, { Location: '/room' });
                 res.end();
-            })
+            });
         }
 
     }
 
+    static checkin = async (req, res) => {
+        let rID = qs.parse(url.parse(req.url).query).rID;
+        if (req.method == 'GET') {
+            let dataHTML = await this.readFile('./view/room/checkin.html');
+            dataHTML = dataHTML.replace('<nav></nav>', navbar);
+            dataHTML = dataHTML.replace('valueRID', `value="${rID}"`);
+            res.writeHead(200, 'Content-Type', 'text/html');
+            res.write(dataHTML);
+            res.end();
+        }
+        else {
+            let data = '';
+            req.on('data', chunk => {
+                data += chunk;
+            });
+            req.on('end', () => {
+                let time = qs.parse(data).checkin;
+                RoomModel.changeRoomStatus(rID, 'rented');
+                RoomModel.checkin(rID, time);
+                res.writeHead(301, {Location: '/room'});
+                res.end();
+            })
+        }
+    }
+
+    static checkout = async (req, res) => {
+        let rID = qs.parse(url.parse(req.url).query).rID;
+        if (req.method == 'GET') {
+            let dataHTML = await this.readFile('./view/room/checkout.html');
+            dataHTML = dataHTML.replace('<nav></nav>', navbar);
+            dataHTML = dataHTML.replace('valueRID', `value="${rID}"`);
+            res.writeHead(200, 'Content-Type', 'text/html');
+            res.write(dataHTML);
+            res.end();
+        }
+        else {
+            let data = '';
+            req.on('data', chunk => {
+                data += chunk;
+            });
+            req.on('end',async () => {
+                let checkout = qs.parse(data).checkout;
+                let checkin = await RoomModel.getLatestCheckIn(rID);
+                RoomModel.changeRoomStatus(rID, 'available');
+                RoomModel.checkout(rID, checkin, checkout);
+                res.writeHead(301, {Location: '/room'});
+                res.end();
+            })
+        }
+    }
 }
 
 module.exports = Room;

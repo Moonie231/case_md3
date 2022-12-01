@@ -17,9 +17,9 @@ const server = http.createServer( async (req, res) => {
 
   if (sessionAvailable || tryLogIn) {
     let {controller, action} = BaseController.parsePath(trimPath);
-    let handler = Router[controller][action] ? Router[controller][action] : Router.notFound;
-    console.log(BaseController.parsePath(trimPath));
-    handler(req,res);
+    let handler = Router[controller][action];
+    // console.log(BaseController.parsePath(trimPath));
+    try {handler(req,res)} catch(err) {Router.notFound.view(req,res)};
   } else {
     Router.login.view(req, res);
   }
